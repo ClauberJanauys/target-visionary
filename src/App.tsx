@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import Analysis from "./pages/Analysis";
 import Projects from "./pages/Projects";
+import Auth from "./pages/Auth";
 
 const queryClient = new QueryClient();
 
@@ -13,12 +14,15 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <BrowserRouter>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Analysis />} />
-            <Route path="/projects" element={<Projects />} />
-          </Routes>
-        </Layout>
+        <Routes>
+          <Route path="/auth" element={<Auth />} />
+          <Route element={<Layout>
+            <Routes>
+              <Route path="/" element={<Analysis />} />
+              <Route path="/projects" element={<Projects />} />
+            </Routes>
+          </Layout>} />
+        </Routes>
       </BrowserRouter>
       <Toaster />
       <Sonner />
