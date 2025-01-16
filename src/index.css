@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -43,7 +43,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-inter antialiased;
+    @apply bg-background text-foreground font-mono antialiased;
   }
   textarea {
     @apply bg-transparent;
@@ -63,4 +63,16 @@
 
 .animate-fade-in {
   animation: fade-in 0.3s ease-out forwards;
+}
+
+.glass-morphism {
+  @apply bg-black/30 backdrop-blur-sm border border-white/10;
+}
+
+.neo-blur {
+  @apply backdrop-blur-md bg-black/50;
+}
+
+.button-3d {
+  @apply shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5;
 }
