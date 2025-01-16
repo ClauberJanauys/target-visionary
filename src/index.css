@@ -6,33 +6,33 @@
 
 @layer base {
   :root {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 98%;
+    --background: 0 0% 17%;
+    --foreground: 214 15% 85%;
 
-    --card: 0 0% 3%;
-    --card-foreground: 0 0% 98%;
+    --card: 220 3% 24%;
+    --card-foreground: 214 15% 85%;
 
-    --popover: 0 0% 0%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 0 0% 17%;
+    --popover-foreground: 214 15% 85%;
 
-    --primary: 199 85% 49%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 210 41% 36%;
+    --primary-foreground: 214 15% 85%;
 
-    --secondary: 0 0% 5%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 220 3% 24%;
+    --secondary-foreground: 214 15% 85%;
 
-    --muted: 0 0% 5%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 220 3% 24%;
+    --muted-foreground: 0 0% 47%;
 
-    --accent: 0 0% 5%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 210 41% 36%;
+    --accent-foreground: 214 15% 85%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive-foreground: 214 15% 85%;
 
-    --border: 0 0% 10%;
-    --input: 0 0% 10%;
-    --ring: 199 85% 49%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 210 41% 36%;
 
     --radius: 0.5rem;
   }
@@ -40,10 +40,10 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-pycharm-border;
   }
   body {
-    @apply bg-background text-foreground font-mono antialiased;
+    @apply bg-pycharm-bg text-pycharm-text font-mono antialiased;
   }
   textarea {
     @apply bg-transparent;
@@ -66,11 +66,11 @@
 }
 
 .glass-morphism {
-  @apply bg-black/30 backdrop-blur-sm border border-white/10;
+  @apply bg-pycharm-surface/30 backdrop-blur-sm border border-pycharm-border;
 }
 
 .neo-blur {
-  @apply backdrop-blur-md bg-black/50;
+  @apply backdrop-blur-md bg-pycharm-surface/50;
 }
 
 .button-3d {

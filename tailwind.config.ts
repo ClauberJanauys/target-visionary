@@ -22,6 +22,18 @@ export default {
         mono: ["JetBrains Mono", "monospace"],
       },
       colors: {
+        // PyCharm theme colors
+        pycharm: {
+          bg: '#2B2B2B',
+          surface: '#3C3F41',
+          hover: '#4C5052',
+          accent: '#365880',
+          'accent-hover': '#466D94',
+          text: '#A9B7C6',
+          'text-dim': '#787878',
+          border: '#323232',
+          success: '#499C54'
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
