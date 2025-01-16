@@ -27,6 +27,35 @@ export type Database = {
         }
         Relationships: []
       }
+      document_research: {
+        Row: {
+          created_at: string
+          document_id: string
+          project_id: string | null
+          text: string
+        }
+        Insert: {
+          created_at?: string
+          document_id?: string
+          project_id?: string | null
+          text: string
+        }
+        Update: {
+          created_at?: string
+          document_id?: string
+          project_id?: string | null
+          text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_research_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["project_id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -39,6 +68,27 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          created_at: string
+          project_id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          project_id?: string
+          status: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          project_id?: string
+          status?: string
+          user_id?: string
         }
         Relationships: []
       }
