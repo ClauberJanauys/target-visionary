@@ -74,18 +74,18 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1a1f2c] to-[#2d3748] p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pycharm-bg to-pycharm-surface p-4">
       <div className="w-full max-w-md space-y-8 animate-fade-in">
         <div className="text-center">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-yellow-200 to-yellow-500 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold text-pycharm-text">
             Crie sua conta
           </h2>
-          <p className="mt-2 text-muted-foreground">
+          <p className="mt-2 text-pycharm-text-dim">
             Comece sua jornada agora mesmo
           </p>
         </div>
 
-        <div className="bg-card/50 backdrop-blur-sm p-6 rounded-lg shadow-xl border border-white/10">
+        <div className="bg-pycharm-surface/50 backdrop-blur-sm p-6 rounded-lg shadow-xl border border-pycharm-border">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
@@ -93,16 +93,16 @@ const SignUp = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className="text-pycharm-text">Email</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
                         placeholder="seu@email.com"
-                        className="bg-secondary/50"
+                        className="bg-pycharm-bg border-pycharm-border text-pycharm-text"
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-400" />
                   </FormItem>
                 )}
               />
@@ -112,16 +112,16 @@ const SignUp = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Senha</FormLabel>
+                    <FormLabel className="text-pycharm-text">Senha</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
                         placeholder="••••••••"
-                        className="bg-secondary/50"
+                        className="bg-pycharm-bg border-pycharm-border text-pycharm-text"
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-400" />
                   </FormItem>
                 )}
               />
@@ -131,23 +131,23 @@ const SignUp = () => {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirme sua senha</FormLabel>
+                    <FormLabel className="text-pycharm-text">Confirme sua senha</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
                         placeholder="••••••••"
-                        className="bg-secondary/50"
+                        className="bg-pycharm-bg border-pycharm-border text-pycharm-text"
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-400" />
                   </FormItem>
                 )}
               />
 
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
+                className="w-full bg-pycharm-accent hover:bg-pycharm-accent-hover text-pycharm-text shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
                 disabled={isLoading}
               >
                 {isLoading ? "Criando conta..." : "Criar conta"}
@@ -157,11 +157,11 @@ const SignUp = () => {
         </div>
 
         <div className="text-center">
-          <p className="text-muted-foreground">
+          <p className="text-pycharm-text-dim">
             Já tem uma conta?{" "}
             <Link
               to="/login"
-              className="text-yellow-400 hover:text-yellow-300 transition-colors font-medium"
+              className="text-pycharm-accent hover:text-pycharm-accent-hover transition-colors font-medium"
             >
               Fazer login
             </Link>
