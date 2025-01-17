@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, Outlet, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { Coins } from "lucide-react";
+import { Coins, BarChart3, FolderKanban } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function Layout() {
   const navigate = useNavigate();
@@ -46,41 +47,43 @@ export function Layout() {
   });
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <header className="border-b border-white/10 backdrop-blur-sm bg-black/30">
+    <div className="min-h-screen flex flex-col bg-pycharm-bg">
+      <header className="border-b border-pycharm-border backdrop-blur-sm bg-pycharm-surface/90 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <nav className="flex items-center gap-6">
-              <Link 
-                to="/"
-                className="text-xl font-semibold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent"
-              >
-                Target Vision
-              </Link>
-              
               <Link
                 to="/"
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-2 text-sm font-medium text-pycharm-text hover:text-pycharm-accent transition-colors"
               >
+                <BarChart3 className="w-4 h-4" />
                 Análise
               </Link>
               
               <Link
                 to="/projects"
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-2 text-sm font-medium text-pycharm-text hover:text-pycharm-accent transition-colors"
               >
+                <FolderKanban className="w-4 h-4" />
                 Projetos
               </Link>
             </nav>
             
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-yellow-400/20 to-yellow-600/20 border border-yellow-500/30">
-                <Coins className="w-5 h-5 text-yellow-400" />
-                <span className="font-medium text-yellow-400">
-                  {credits?.amount ?? 0} créditos
-                </span>
-              </div>
-            </div>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-yellow-500/20 hover:bg-yellow-500/30 transition-colors">
+                    <Coins className="w-4 h-4 text-yellow-500/90" />
+                    <span className="font-medium text-yellow-500/90">
+                      {credits?.amount ?? 0}
+                    </span>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Créditos disponíveis</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
       </header>
