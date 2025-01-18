@@ -53,8 +53,7 @@ export const LoginForm = () => {
         return;
       }
 
-      // Se não houver erro, redireciona para a página principal
-      navigate("/");
+      navigate("/app");
       toast.success("Login realizado com sucesso!");
     } catch (error) {
       toast.error("Ocorreu um erro ao fazer login");

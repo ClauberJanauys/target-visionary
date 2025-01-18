@@ -22,7 +22,9 @@ export function Layout() {
     checkAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!session) {
+      if (event === 'SIGNED_IN') {
+        navigate("/app");
+      } else if (!session) {
         navigate("/login");
       }
     });
