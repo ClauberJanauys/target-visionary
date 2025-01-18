@@ -50,7 +50,12 @@ export const LoginForm = () => {
 
       if (error) {
         toast.error(handleAuthError(error));
+        return;
       }
+
+      // Se não houver erro, redireciona para a página principal
+      navigate("/");
+      toast.success("Login realizado com sucesso!");
     } catch (error) {
       toast.error("Ocorreu um erro ao fazer login");
     } finally {

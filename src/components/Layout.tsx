@@ -53,7 +53,7 @@ export function Layout() {
           <div className="flex h-16 items-center justify-between">
             <nav className="flex items-center gap-6">
               <Link
-                to="/"
+                to="/app"
                 className="flex items-center gap-2 text-sm font-medium text-pycharm-text hover:text-pycharm-accent transition-colors"
               >
                 <BarChart3 className="w-4 h-4" />
@@ -61,7 +61,7 @@ export function Layout() {
               </Link>
               
               <Link
-                to="/projects"
+                to="/app/projects"
                 className="flex items-center gap-2 text-sm font-medium text-pycharm-text hover:text-pycharm-accent transition-colors"
               >
                 <FolderKanban className="w-4 h-4" />

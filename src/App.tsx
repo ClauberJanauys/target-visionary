@@ -17,14 +17,14 @@ const App = () => (
     <TooltipProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/landing" element={<Landing />} />
+          <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/" element={<Layout />}>
+          <Route path="/app" element={<Layout />}>
             <Route index element={<Analysis />} />
             <Route path="projects" element={<Projects />} />
           </Route>
-          <Route path="*" element={<Navigate to="/landing" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
       <Toaster />
