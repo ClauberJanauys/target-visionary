@@ -66,22 +66,15 @@ export default function Analysis() {
 
       if (projectError) throw projectError;
 
-      // 3. Send to webhook
-      const webhookUrl = "https://n8n.clauberj.com/webhook-test/85c6d2e9-9a03-48e8-af85-b65195da4dff";
-      const response = await fetch(webhookUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      // 3. Send to webhook via Edge Function
+      const { data: webhookResponse, error: webhookError } = await supabase.functions.invoke('webhook-proxy', {
+        body: {
           project_id: project.project_id,
           message: targetAudience
-        }),
+        }
       });
 
-      if (!response.ok) {
-        throw new Error("Erro ao enviar dados para análise");
-      }
+      if (webhookError) throw webhookError;
 
       toast({
         title: "Sucesso!",
