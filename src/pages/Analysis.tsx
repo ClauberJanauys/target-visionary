@@ -22,15 +22,17 @@ export default function Analysis() {
     setIsLoading(true);
     try {
       // 1. Check and deduct credits
-      const { data: session } = await supabase.auth.getSession();
-      if (!session?.user) {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const userId = sessionData.session?.user?.id;
+      
+      if (!userId) {
         throw new Error("Usuário não autenticado");
       }
 
       const { data: credits, error: creditsError } = await supabase
         .from("credits")
         .select("amount")
-        .eq("id", session.user.id)
+        .eq("id", userId)
         .single();
 
       if (creditsError) throw creditsError;
@@ -48,7 +50,7 @@ export default function Analysis() {
       const { error: updateError } = await supabase
         .from("credits")
         .update({ amount: credits.amount - 1 })
-        .eq("id", session.user.id);
+        .eq("id", userId);
 
       if (updateError) throw updateError;
 
@@ -56,7 +58,7 @@ export default function Analysis() {
       const { data: project, error: projectError } = await supabase
         .from("projects")
         .insert({
-          user_id: session.user.id,
+          user_id: userId,
           status: "pending"
         })
         .select()
