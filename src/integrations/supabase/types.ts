@@ -27,6 +27,64 @@ export type Database = {
         }
         Relationships: []
       }
+      document_bigfive: {
+        Row: {
+          created_at: string
+          document_id: string
+          project_id: string | null
+          text: string
+        }
+        Insert: {
+          created_at?: string
+          document_id?: string
+          project_id?: string | null
+          text: string
+        }
+        Update: {
+          created_at?: string
+          document_id?: string
+          project_id?: string | null
+          text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_bigfive_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["project_id"]
+          },
+        ]
+      }
+      document_eneagrama: {
+        Row: {
+          created_at: string
+          document_id: string
+          project_id: string | null
+          text: string
+        }
+        Insert: {
+          created_at?: string
+          document_id?: string
+          project_id?: string | null
+          text: string
+        }
+        Update: {
+          created_at?: string
+          document_id?: string
+          project_id?: string | null
+          text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_eneagrama_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["project_id"]
+          },
+        ]
+      }
       document_research: {
         Row: {
           created_at: string
