@@ -6,7 +6,7 @@ const corsHeaders = {
   'Content-Type': 'application/json',
 }
 
-const WEBHOOK_URL = "https://n8n.clauberj.com/webhook-test/85c6d2e9-9a03-48e8-af85-b65195da4dff"
+const WEBHOOK_URL = "https://webhook.clauberj.com/webhook/85c6d2e9-9a03-48e8-af85-b65195da4dff"
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -20,6 +20,9 @@ serve(async (req) => {
 
     console.log('Received request:', { project_id, message })
 
+    // Add more detailed logging before making the webhook request
+    console.log('Attempting to call webhook URL:', WEBHOOK_URL)
+
     const response = await fetch(WEBHOOK_URL, {
       method: 'POST',
       headers: {
@@ -28,13 +31,31 @@ serve(async (req) => {
       body: JSON.stringify({ project_id, message }),
     })
 
+    // Log the raw response for debugging
+    console.log('Webhook raw response:', {
+      status: response.status,
+      statusText: response.statusText,
+    })
+
     if (!response.ok) {
-      console.error('Webhook request failed:', response.statusText)
-      throw new Error(`Webhook request failed: ${response.statusText}`)
+      const errorText = await response.text()
+      console.error('Webhook request failed:', {
+        status: response.status,
+        statusText: response.statusText,
+        body: errorText
+      })
+      throw new Error(`Webhook request failed: Status ${response.status} - ${errorText || response.statusText}`)
     }
 
-    const responseData = await response.json()
-    console.log('Webhook response:', responseData)
+    let responseData
+    try {
+      responseData = await response.json()
+    } catch (e) {
+      console.log('Response is not JSON:', await response.text())
+      responseData = { message: 'Success (non-JSON response)' }
+    }
+
+    console.log('Webhook response data:', responseData)
 
     return new Response(
       JSON.stringify({ success: true, data: responseData }),
@@ -43,7 +64,10 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in webhook-proxy:', error)
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: error.message,
+        details: error.stack
+      }),
       { headers: corsHeaders, status: 500 }
     )
   }
