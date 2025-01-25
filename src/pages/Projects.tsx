@@ -68,25 +68,38 @@ export default function Projects() {
 
       if (projectsError) throw projectsError;
 
+      console.log("Projects found:", projectsData);
+
       const projectsWithDocs = await Promise.all(
         projectsData.map(async (project) => {
-          const { data: researchDoc } = await supabase
+          console.log("Fetching documents for project:", project.project_id);
+
+          const { data: researchDoc, error: researchError } = await supabase
             .from("document_research")
-            .select("document_id, text, created_at, project_id")
+            .select("*")
             .eq("project_id", project.project_id)
             .maybeSingle();
 
-          const { data: bigfiveDoc } = await supabase
+          if (researchError) console.error("Research doc error:", researchError);
+          console.log("Research doc found:", researchDoc);
+
+          const { data: bigfiveDoc, error: bigfiveError } = await supabase
             .from("document_bigfive")
-            .select("document_id, text, created_at, project_id")
+            .select("*")
             .eq("project_id", project.project_id)
             .maybeSingle();
 
-          const { data: eneagramaDoc } = await supabase
+          if (bigfiveError) console.error("Big Five doc error:", bigfiveError);
+          console.log("Big Five doc found:", bigfiveDoc);
+
+          const { data: eneagramaDoc, error: eneagramaError } = await supabase
             .from("document_eneagrama")
-            .select("document_id, text, created_at, project_id")
+            .select("*")
             .eq("project_id", project.project_id)
             .maybeSingle();
+
+          if (eneagramaError) console.error("Eneagrama doc error:", eneagramaError);
+          console.log("Eneagrama doc found:", eneagramaDoc);
 
           return {
             ...project,
@@ -99,11 +112,13 @@ export default function Projects() {
         })
       );
 
+      console.log("Final projects with docs:", projectsWithDocs);
       return projectsWithDocs as Project[];
     },
   });
 
   const handleDocumentClick = (document: Document | null, title: string) => {
+    if (!document) return;
     setSelectedDocument(document);
     setDocumentTitle(title);
     setIsDialogOpen(true);
@@ -152,7 +167,7 @@ export default function Projects() {
               <div className="space-y-4">
                 <button 
                   onClick={() => handleDocumentClick(project.documents.research, "Pesquisa")}
-                  className="w-full flex items-start gap-2 p-2 rounded-lg hover:bg-pycharm-hover transition-colors"
+                  className="w-full flex items-start gap-2 p-2 rounded-lg hover:bg-pycharm-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={!project.documents.research}
                 >
                   <BookOpen className="w-5 h-5 mt-1 text-blue-500" />
@@ -166,7 +181,7 @@ export default function Projects() {
 
                 <button 
                   onClick={() => handleDocumentClick(project.documents.bigfive, "Big Five")}
-                  className="w-full flex items-start gap-2 p-2 rounded-lg hover:bg-pycharm-hover transition-colors"
+                  className="w-full flex items-start gap-2 p-2 rounded-lg hover:bg-pycharm-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={!project.documents.bigfive}
                 >
                   <Brain className="w-5 h-5 mt-1 text-blue-500" />
@@ -180,7 +195,7 @@ export default function Projects() {
 
                 <button 
                   onClick={() => handleDocumentClick(project.documents.eneagrama, "Eneagrama")}
-                  className="w-full flex items-start gap-2 p-2 rounded-lg hover:bg-pycharm-hover transition-colors"
+                  className="w-full flex items-start gap-2 p-2 rounded-lg hover:bg-pycharm-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={!project.documents.eneagrama}
                 >
                   <User className="w-5 h-5 mt-1 text-blue-500" />
