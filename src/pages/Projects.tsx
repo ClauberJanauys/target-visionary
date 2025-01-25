@@ -13,6 +13,7 @@ type Document = {
   document_id: string;
   text: string;
   created_at: string;
+  project_id: string;
 };
 
 type Project = {
@@ -53,7 +54,7 @@ const DocumentViewer = ({ isOpen, onClose, document, title }: DocumentViewerProp
 };
 
 export default function Projects() {
-  const [selectedDocument, setSelectedDocument] = useState<Document | null>();
+  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
   const [documentTitle, setDocumentTitle] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -71,30 +72,31 @@ export default function Projects() {
       // Fetch documents for each project
       const projectsWithDocs = await Promise.all(
         projectsData.map(async (project) => {
-          const [researchDoc, bigfiveDoc, eneagramaDoc] = await Promise.all([
-            supabase
-              .from("document_research")
-              .select("*")
-              .eq("project_id", project.project_id)
-              .single(),
-            supabase
-              .from("document_bigfive")
-              .select("*")
-              .eq("project_id", project.project_id)
-              .single(),
-            supabase
-              .from("document_eneagrama")
-              .select("*")
-              .eq("project_id", project.project_id)
-              .single(),
-          ]);
+          // Buscar documentos individualmente usando project_id
+          const { data: researchDoc } = await supabase
+            .from("document_research")
+            .select("*")
+            .eq("project_id", project.project_id)
+            .maybeSingle();
+
+          const { data: bigfiveDoc } = await supabase
+            .from("document_bigfive")
+            .select("*")
+            .eq("project_id", project.project_id)
+            .maybeSingle();
+
+          const { data: eneagramaDoc } = await supabase
+            .from("document_eneagrama")
+            .select("*")
+            .eq("project_id", project.project_id)
+            .maybeSingle();
 
           return {
             ...project,
             documents: {
-              research: researchDoc.data,
-              bigfive: bigfiveDoc.data,
-              eneagrama: eneagramaDoc.data,
+              research: researchDoc,
+              bigfive: bigfiveDoc,
+              eneagrama: eneagramaDoc,
             },
           };
         })
