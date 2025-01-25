@@ -14,16 +14,16 @@ type Document = {
   text: string;
   created_at: string;
   project_id: string;
-};
+} | null;
 
 type Project = {
   project_id: string;
   created_at: string;
   status: string;
   documents: {
-    research: Document | null;
-    bigfive: Document | null;
-    eneagrama: Document | null;
+    research: Document;
+    bigfive: Document;
+    eneagrama: Document;
   };
 };
 
@@ -77,21 +77,21 @@ export default function Projects() {
             .from("document_research")
             .select("document_id, text, created_at, project_id")
             .eq("project_id", project.project_id)
-            .single();
+            .maybeSingle();
 
           // Buscar documento big five
           const { data: bigfiveDoc } = await supabase
             .from("document_bigfive")
             .select("document_id, text, created_at, project_id")
             .eq("project_id", project.project_id)
-            .single();
+            .maybeSingle();
 
           // Buscar documento eneagrama
           const { data: eneagramaDoc } = await supabase
             .from("document_eneagrama")
             .select("document_id, text, created_at, project_id")
             .eq("project_id", project.project_id)
-            .single();
+            .maybeSingle();
 
           return {
             ...project,
