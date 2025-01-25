@@ -61,7 +61,7 @@ export default function Projects() {
   const { data: projects, isLoading } = useQuery({
     queryKey: ["projects"],
     queryFn: async () => {
-      // Fetch projects
+      // Primeiro, buscar todos os projetos
       const { data: projectsData, error: projectsError } = await supabase
         .from("projects")
         .select("*")
@@ -69,27 +69,29 @@ export default function Projects() {
 
       if (projectsError) throw projectsError;
 
-      // Fetch documents for each project
+      // Para cada projeto, buscar seus documentos relacionados
       const projectsWithDocs = await Promise.all(
         projectsData.map(async (project) => {
-          // Buscar documentos individualmente usando project_id
+          // Buscar documento de pesquisa
           const { data: researchDoc } = await supabase
             .from("document_research")
-            .select("*")
+            .select("document_id, text, created_at, project_id")
             .eq("project_id", project.project_id)
-            .maybeSingle();
+            .single();
 
+          // Buscar documento big five
           const { data: bigfiveDoc } = await supabase
             .from("document_bigfive")
-            .select("*")
+            .select("document_id, text, created_at, project_id")
             .eq("project_id", project.project_id)
-            .maybeSingle();
+            .single();
 
+          // Buscar documento eneagrama
           const { data: eneagramaDoc } = await supabase
             .from("document_eneagrama")
-            .select("*")
+            .select("document_id, text, created_at, project_id")
             .eq("project_id", project.project_id)
-            .maybeSingle();
+            .single();
 
           return {
             ...project,
@@ -146,7 +148,7 @@ export default function Projects() {
           <Card key={project.project_id} className="bg-pycharm-surface border-pycharm-border hover:border-pycharm-accent transition-colors">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-pycharm-text">
-                <FileText className="w-5 h-5 text-pycharm-accent" />
+                <FileText className="w-5 h-5 text-blue-500" />
                 Projeto
               </CardTitle>
               <CardDescription className="text-pycharm-text-dim">
@@ -159,7 +161,7 @@ export default function Projects() {
                   onClick={() => handleDocumentClick(project.documents.research, "Pesquisa")}
                   className="w-full flex items-start gap-2 p-2 rounded-lg hover:bg-pycharm-hover transition-colors"
                 >
-                  <BookOpen className="w-5 h-5 mt-1 text-pycharm-accent" />
+                  <BookOpen className="w-5 h-5 mt-1 text-blue-500" />
                   <div className="text-left">
                     <p className="font-medium text-pycharm-text">Pesquisa</p>
                     <p className="text-sm text-pycharm-text-dim">
@@ -172,7 +174,7 @@ export default function Projects() {
                   onClick={() => handleDocumentClick(project.documents.bigfive, "Big Five")}
                   className="w-full flex items-start gap-2 p-2 rounded-lg hover:bg-pycharm-hover transition-colors"
                 >
-                  <Brain className="w-5 h-5 mt-1 text-pycharm-accent" />
+                  <Brain className="w-5 h-5 mt-1 text-blue-500" />
                   <div className="text-left">
                     <p className="font-medium text-pycharm-text">Big Five</p>
                     <p className="text-sm text-pycharm-text-dim">
@@ -185,7 +187,7 @@ export default function Projects() {
                   onClick={() => handleDocumentClick(project.documents.eneagrama, "Eneagrama")}
                   className="w-full flex items-start gap-2 p-2 rounded-lg hover:bg-pycharm-hover transition-colors"
                 >
-                  <User className="w-5 h-5 mt-1 text-pycharm-accent" />
+                  <User className="w-5 h-5 mt-1 text-blue-500" />
                   <div className="text-left">
                     <p className="font-medium text-pycharm-text">Eneagrama</p>
                     <p className="text-sm text-pycharm-text-dim">
