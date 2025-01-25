@@ -61,7 +61,6 @@ export default function Projects() {
   const { data: projects, isLoading } = useQuery({
     queryKey: ["projects"],
     queryFn: async () => {
-      // Primeiro, buscar todos os projetos
       const { data: projectsData, error: projectsError } = await supabase
         .from("projects")
         .select("*")
@@ -69,24 +68,20 @@ export default function Projects() {
 
       if (projectsError) throw projectsError;
 
-      // Para cada projeto, buscar seus documentos relacionados
       const projectsWithDocs = await Promise.all(
         projectsData.map(async (project) => {
-          // Buscar documento de pesquisa
           const { data: researchDoc } = await supabase
             .from("document_research")
             .select("document_id, text, created_at, project_id")
             .eq("project_id", project.project_id)
             .maybeSingle();
 
-          // Buscar documento big five
           const { data: bigfiveDoc } = await supabase
             .from("document_bigfive")
             .select("document_id, text, created_at, project_id")
             .eq("project_id", project.project_id)
             .maybeSingle();
 
-          // Buscar documento eneagrama
           const { data: eneagramaDoc } = await supabase
             .from("document_eneagrama")
             .select("document_id, text, created_at, project_id")
@@ -109,11 +104,9 @@ export default function Projects() {
   });
 
   const handleDocumentClick = (document: Document | null, title: string) => {
-    if (document) {
-      setSelectedDocument(document);
-      setDocumentTitle(title);
-      setIsDialogOpen(true);
-    }
+    setSelectedDocument(document);
+    setDocumentTitle(title);
+    setIsDialogOpen(true);
   };
 
   if (isLoading) {
@@ -160,6 +153,7 @@ export default function Projects() {
                 <button 
                   onClick={() => handleDocumentClick(project.documents.research, "Pesquisa")}
                   className="w-full flex items-start gap-2 p-2 rounded-lg hover:bg-pycharm-hover transition-colors"
+                  disabled={!project.documents.research}
                 >
                   <BookOpen className="w-5 h-5 mt-1 text-blue-500" />
                   <div className="text-left">
@@ -173,6 +167,7 @@ export default function Projects() {
                 <button 
                   onClick={() => handleDocumentClick(project.documents.bigfive, "Big Five")}
                   className="w-full flex items-start gap-2 p-2 rounded-lg hover:bg-pycharm-hover transition-colors"
+                  disabled={!project.documents.bigfive}
                 >
                   <Brain className="w-5 h-5 mt-1 text-blue-500" />
                   <div className="text-left">
@@ -186,6 +181,7 @@ export default function Projects() {
                 <button 
                   onClick={() => handleDocumentClick(project.documents.eneagrama, "Eneagrama")}
                   className="w-full flex items-start gap-2 p-2 rounded-lg hover:bg-pycharm-hover transition-colors"
+                  disabled={!project.documents.eneagrama}
                 >
                   <User className="w-5 h-5 mt-1 text-blue-500" />
                   <div className="text-left">
