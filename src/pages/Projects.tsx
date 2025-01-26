@@ -63,57 +63,32 @@ export default function Projects() {
     queryFn: async () => {
       const { data: projectsData, error: projectsError } = await supabase
         .from("projects")
-        .select("*")
+        .select(`
+          *,
+          document_research (*),
+          document_bigfive (*),
+          document_eneagrama (*)
+        `)
         .order("created_at", { ascending: false });
 
-      if (projectsError) throw projectsError;
+      console.log("Raw Supabase response:", projectsData);
+      
+      if (projectsError) {
+        console.error("Projects query error:", projectsError);
+        throw projectsError;
+      }
 
-      console.log("Projects found:", projectsData);
+      const processedProjects = projectsData.map(project => ({
+        ...project,
+        documents: {
+          research: project.document_research?.[0] || null,
+          bigfive: project.document_bigfive?.[0] || null,
+          eneagrama: project.document_eneagrama?.[0] || null,
+        },
+      }));
 
-      const projectsWithDocs = await Promise.all(
-        projectsData.map(async (project) => {
-          console.log("Fetching documents for project:", project.project_id);
-
-          const { data: researchDoc, error: researchError } = await supabase
-            .from("document_research")
-            .select("*")
-            .eq("project_id", project.project_id)
-            .maybeSingle();
-
-          if (researchError) console.error("Research doc error:", researchError);
-          console.log("Research doc found:", researchDoc);
-
-          const { data: bigfiveDoc, error: bigfiveError } = await supabase
-            .from("document_bigfive")
-            .select("*")
-            .eq("project_id", project.project_id)
-            .maybeSingle();
-
-          if (bigfiveError) console.error("Big Five doc error:", bigfiveError);
-          console.log("Big Five doc found:", bigfiveDoc);
-
-          const { data: eneagramaDoc, error: eneagramaError } = await supabase
-            .from("document_eneagrama")
-            .select("*")
-            .eq("project_id", project.project_id)
-            .maybeSingle();
-
-          if (eneagramaError) console.error("Eneagrama doc error:", eneagramaError);
-          console.log("Eneagrama doc found:", eneagramaDoc);
-
-          return {
-            ...project,
-            documents: {
-              research: researchDoc,
-              bigfive: bigfiveDoc,
-              eneagrama: eneagramaDoc,
-            },
-          };
-        })
-      );
-
-      console.log("Final projects with docs:", projectsWithDocs);
-      return projectsWithDocs as Project[];
+      console.log("Processed projects:", processedProjects);
+      return processedProjects as Project[];
     },
   });
 
