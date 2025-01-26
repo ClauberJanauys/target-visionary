@@ -61,34 +61,64 @@ export default function Projects() {
   const { data: projects, isLoading } = useQuery({
     queryKey: ["projects"],
     queryFn: async () => {
+      // 1. Fetch projects first
       const { data: projectsData, error: projectsError } = await supabase
         .from("projects")
-        .select(`
-          *,
-          document_research (*),
-          document_bigfive (*),
-          document_eneagrama (*)
-        `)
+        .select("*")
         .order("created_at", { ascending: false });
 
-      console.log("Raw Supabase response:", projectsData);
-      
       if (projectsError) {
-        console.error("Projects query error:", projectsError);
+        console.error("Error fetching projects:", projectsError);
         throw projectsError;
       }
 
-      const processedProjects = projectsData.map(project => ({
-        ...project,
-        documents: {
-          research: project.document_research?.[0] || null,
-          bigfive: project.document_bigfive?.[0] || null,
-          eneagrama: project.document_eneagrama?.[0] || null,
-        },
-      }));
+      console.log("Projects found:", projectsData);
 
-      console.log("Processed projects:", processedProjects);
-      return processedProjects as Project[];
+      // 2. Fetch documents for each project
+      const projectsWithDocs = await Promise.all(
+        projectsData.map(async (project) => {
+          console.log("Fetching documents for project:", project.project_id);
+
+          // Fetch research document
+          const { data: researchDocs, error: researchError } = await supabase
+            .from("document_research")
+            .select("*")
+            .eq("project_id", project.project_id);
+
+          if (researchError) console.error("Research doc error:", researchError);
+          console.log("Research docs found:", researchDocs);
+
+          // Fetch bigfive document
+          const { data: bigfiveDocs, error: bigfiveError } = await supabase
+            .from("document_bigfive")
+            .select("*")
+            .eq("project_id", project.project_id);
+
+          if (bigfiveError) console.error("Big Five doc error:", bigfiveError);
+          console.log("Big Five docs found:", bigfiveDocs);
+
+          // Fetch eneagrama document
+          const { data: eneagramaDocs, error: eneagramaError } = await supabase
+            .from("document_eneagrama")
+            .select("*")
+            .eq("project_id", project.project_id);
+
+          if (eneagramaError) console.error("Eneagrama doc error:", eneagramaError);
+          console.log("Eneagrama docs found:", eneagramaDocs);
+
+          return {
+            ...project,
+            documents: {
+              research: researchDocs?.[0] || null,
+              bigfive: bigfiveDocs?.[0] || null,
+              eneagrama: eneagramaDocs?.[0] || null,
+            },
+          };
+        })
+      );
+
+      console.log("Final projects with docs:", projectsWithDocs);
+      return projectsWithDocs as Project[];
     },
   });
 
@@ -143,13 +173,13 @@ export default function Projects() {
                 <button 
                   onClick={() => handleDocumentClick(project.documents.research, "Pesquisa")}
                   className="w-full flex items-start gap-2 p-2 rounded-lg hover:bg-pycharm-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={!project.documents.research}
+                  disabled={!project.documents.research?.text}
                 >
                   <BookOpen className="w-5 h-5 mt-1 text-blue-500" />
                   <div className="text-left">
                     <p className="font-medium text-pycharm-text">Pesquisa</p>
                     <p className="text-sm text-pycharm-text-dim">
-                      {project.documents.research ? "Clique para visualizar" : "Pendente"}
+                      {project.documents.research?.text ? "Clique para visualizar" : "Pendente"}
                     </p>
                   </div>
                 </button>
@@ -157,13 +187,13 @@ export default function Projects() {
                 <button 
                   onClick={() => handleDocumentClick(project.documents.bigfive, "Big Five")}
                   className="w-full flex items-start gap-2 p-2 rounded-lg hover:bg-pycharm-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={!project.documents.bigfive}
+                  disabled={!project.documents.bigfive?.text}
                 >
                   <Brain className="w-5 h-5 mt-1 text-blue-500" />
                   <div className="text-left">
                     <p className="font-medium text-pycharm-text">Big Five</p>
                     <p className="text-sm text-pycharm-text-dim">
-                      {project.documents.bigfive ? "Clique para visualizar" : "Pendente"}
+                      {project.documents.bigfive?.text ? "Clique para visualizar" : "Pendente"}
                     </p>
                   </div>
                 </button>
@@ -171,13 +201,13 @@ export default function Projects() {
                 <button 
                   onClick={() => handleDocumentClick(project.documents.eneagrama, "Eneagrama")}
                   className="w-full flex items-start gap-2 p-2 rounded-lg hover:bg-pycharm-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={!project.documents.eneagrama}
+                  disabled={!project.documents.eneagrama?.text}
                 >
                   <User className="w-5 h-5 mt-1 text-blue-500" />
                   <div className="text-left">
                     <p className="font-medium text-pycharm-text">Eneagrama</p>
                     <p className="text-sm text-pycharm-text-dim">
-                      {project.documents.eneagrama ? "Clique para visualizar" : "Pendente"}
+                      {project.documents.eneagrama?.text ? "Clique para visualizar" : "Pendente"}
                     </p>
                   </div>
                 </button>
